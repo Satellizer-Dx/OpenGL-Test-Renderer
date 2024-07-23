@@ -64,31 +64,50 @@ int main()
         processInput(window);
 
         // render
-
+        unsigned int VAO;
         unsigned int VBO;
+        glGenVertexArrays(1, &VAO);
         glGenBuffers(1, &VBO);
+
+        // bind and assign buffer data
+        glBindVertexArray(VAO);
         glBindBuffer(GL_ARRAY_BUFFER, VBO);
         glBufferData(GL_ARRAY_BUFFER, sizeof(triangle1), triangle1, GL_STATIC_DRAW);
-        unsigned int vertexShader;
 
+        // initialize and configure vertex shader
+        unsigned int vertexShader;
         vertexShader = glCreateShader(GL_VERTEX_SHADER);
         glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
         glCompileShader(vertexShader);
 
+        // initialize and configure fragment shader
         unsigned int fragmentShader;
         fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
         glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
         glCompileShader(fragmentShader);
 
+        // create, attach shaders to, and link shader program
         unsigned int shaderProgram;
         shaderProgram = glCreateProgram();
-
         glAttachShader(shaderProgram, vertexShader);
         glAttachShader(shaderProgram, fragmentShader);
         glLinkProgram(shaderProgram);
 
+        // point to and enable vertex attribute(s)
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+        glEnableVertexAttribArray(0);
+
+        glUseProgram(shaderProgram);
+        glBindVertexArray(VAO);
+
+        // shaders are already attached, fields no longer needed
+        glDeleteShader(vertexShader);
+        glDeleteShader(fragmentShader);
+        
+        // stuff we're drawing
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
+        glDrawArrays(GL_TRIANGLES, 0, 3);
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         glfwSwapBuffers(window);
