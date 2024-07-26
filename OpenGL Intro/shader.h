@@ -13,17 +13,9 @@ class shader
 public:
     // the program ID
     unsigned int ID;
-    // constructor reads and builds the shader
-    void Shader(const char* vertexPath, const char* fragmentPath);
-    // use/activate the shader
-    void use();
-    // utility uniform functions
-    void setBool(const std::string& name, bool value) const;
-    void setInt(const std::string& name, int value) const;
-    void setFloat(const std::string& name, float value) const;
 
-    // function definitions
-    void Shader(const char* vertexPath, const char* fragmentPath)
+    // constructor reads and builds the shader
+    shader(const char* vertexPath, const char* fragmentPath)
     {
         // 1. retrieve the vertex/fragment source code from filePath
         std::string vertexCode;
@@ -124,6 +116,18 @@ public:
     void setFloat(const std::string& name, float value) const
     {
         glUniform1f(glGetUniformLocation(ID, name.c_str()), value);
+    }
+    void setVec2(const std::string& name, float value[2]) const
+    {
+        glUniform2f(glGetUniformLocation(ID, name.c_str()), value[0], value[1]);
+    }
+    void setVec3(const std::string& name, float value[3]) const
+    {
+        glUniform3f(glGetUniformLocation(ID, name.c_str()), value[0], value[1], value[2]);
+    }
+    void setVec4(const std::string& name, float value[4]) const
+    {
+        glUniform4f(glGetUniformLocation(ID, name.c_str()), value[0], value[1], value[2], value[3]);
     }
 
 private:
