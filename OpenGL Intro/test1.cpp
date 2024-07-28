@@ -44,7 +44,7 @@ int main()
     glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &nrAttributes);
     std::cout << "Maximum nr of vertex attributes supported: " << nrAttributes << std::endl;
 
-    shader ourShader("shaders/shader.glvs", "shaders/shader.glfs");
+    shader ourShader("shaders/vShader.glsl", "shaders/fShader.glsl");
 
     // shapes
     float triangle1[] = {
@@ -79,19 +79,13 @@ int main()
         // input
         processInput(window);
 
-        // render
         // clear the colorbuffer
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
         // activate shader program
         ourShader.use();
-
-        // update the uniform color
-        float timeValue = glfwGetTime();
-        float greenValue = (sin(timeValue) / 2.0f) + 0.5f;
-        float ourColor[4] = {0.0f, greenValue, 0.0f, 1.0f};
-        ourShader.setVec4("ourColor", ourColor);
+        ourShader.setFloat("offsetToRight", 0.25f);
 
         // stuff we're drawing
         glDrawArrays(GL_TRIANGLES, 0, 3);
